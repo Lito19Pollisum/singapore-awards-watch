@@ -1,0 +1,228 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Singapore Awards Watch</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap">
+<style>
+/* Pollisum brand and demo-app system: Roboto, red headings, blush cards, maroon bar closes the page. No gradients, no extra accent hues. */
+:root{
+  color-scheme:light;
+  --maroon:#7A0C1C; --footer:#6A0303; --red:#990000; --signal:#C41E2D; --bright:#DC0E20;
+  --blush:#EDD4D4; --mist:#F3F3F3; --line:#E4E4E4; --ink:#191D24; --muted:#4A515C; --green:#007A38;
+  --font:"Roboto",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{
+  background:#fff; color:var(--ink); font-family:var(--font); font-size:16px; line-height:1.55; margin:0;
+  padding-block:0 0;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap{max-width:1040px; margin:0 auto; display:flex; flex-direction:column; gap:44px; padding-block:0 56px}
+h1,h2{font-family:var(--font); font-weight:900; text-transform:uppercase; color:var(--red); text-wrap:balance; margin:0; line-height:1.05; letter-spacing:0}
+h1{font-size:clamp(34px,6vw,64px); color:#fff}
+h2{font-size:clamp(26px,4vw,36px)}
+p{margin:0}
+a{color:var(--red); text-underline-offset:2px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--red); outline-offset:2px}
+.meta{font-weight:700; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+header{background:var(--maroon); color:#fff; display:flex; flex-direction:column; gap:14px; padding:36px 28px; margin-top:24px; border-radius:8px}
+header .meta{color:#fff}
+header .lede{color:#fff}
+.lede{max-width:65ch; font-size:18px}
+.two{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px}
+.two > *{min-width:0}
+.lead{background:var(--blush); border-radius:8px; padding:22px 24px; display:flex; flex-direction:column; gap:10px}
+.lead .big{font-weight:900; font-size:28px; line-height:1.1; color:var(--red); text-transform:uppercase}
+.lead .who{color:var(--ink); font-size:16px}
+.tag{align-self:flex-start; font-weight:700; font-size:12px; letter-spacing:.12em; text-transform:uppercase; background:var(--red); color:#fff; padding:3px 10px; border-radius:4px}
+.bar{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+.chip{font:700 13px var(--font); letter-spacing:.08em; text-transform:uppercase; background:#fff; color:var(--red); border:2px solid var(--red); padding:7px 16px; border-radius:4px; cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--red); color:#fff}
+.scroll{overflow-x:auto; border:1px solid var(--line); border-radius:8px; background:#fff}
+table{border-collapse:collapse; width:100%; min-width:860px}
+th{font-weight:700; font-size:12px; letter-spacing:.14em; text-transform:uppercase; text-align:left; color:var(--red); padding:12px 14px; background:var(--mist); border-bottom:2px solid var(--red); white-space:nowrap}
+td{padding:14px; vertical-align:top; border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+td.date{font-weight:500; font-size:13.5px; white-space:nowrap; color:var(--muted)}
+td.val{font-weight:900; font-size:16px; white-space:nowrap; font-variant-numeric:tabular-nums; color:var(--red)}
+.proj{font-weight:700}
+.client{color:var(--muted); font-size:14px}
+.fit{display:inline-block; font-weight:700; font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; padding:3px 10px; margin-bottom:6px; border-radius:4px}
+.fit.high{background:var(--red); color:#fff}
+.fit.med{background:var(--blush); color:var(--red)}
+.fit.low{border:1px solid var(--line); color:var(--muted)}
+.fit.unk{border:1px dashed var(--muted); color:var(--muted)}
+.why{font-size:14px; max-width:44ch}
+.note{font-size:13.5px; color:var(--muted); max-width:70ch}
+.list{display:flex; flex-direction:column}
+.list > div{display:grid; grid-template-columns:150px 1fr; gap:4px 20px; padding:14px 0; border-bottom:1px solid var(--line)}
+.list > div > *{min-width:0}
+.list dt{font-weight:700; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--red)}
+.src{columns:2 340px; column-gap:32px; font-size:14px; margin:0; padding-left:18px}
+.src li{margin-bottom:6px; break-inside:avoid}
+.endbar{height:14px; background:var(--footer); margin-inline:calc(-1 * max(16px, env(safe-area-inset-left, 0px))); margin-inline-end:calc(-1 * max(16px, env(safe-area-inset-right, 0px)))}
+@media (max-width:560px){ .list > div{grid-template-columns:1fr} }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="meta">Pollisum · Edition 1 · 27 Oct 2026 · Refreshed every Monday</div>
+    <h1>Singapore Awards Watch</h1>
+    <p class="lede">Newly awarded construction contracts in Singapore, with the main contractor to approach and how well the work fits our lifting gear and fabrication scope. Each Monday edition adds what has been announced since the last one.</p>
+  </header>
+
+  <section class="two" aria-label="Newest awards">
+    <div class="lead">
+      <span class="tag">Newest · reported 1 Oct 2026</span>
+      <div class="big">Tuas Road Viaduct Phase 2</div>
+      <p class="who">LTA awarded three viaduct contracts worth about S$1.2bn: CCCC (S$430.3m), China Harbour (S$404.4m) and Hwa Seng Builder (S$381.6m). Elevated structures mean girder and precast handling.</p>
+    </div>
+    <div class="lead">
+      <span class="tag">Largest · reported mid-Sep 2026</span>
+      <div class="big">Tengah General and Community Hospital</div>
+      <p class="who">Ssangyong E&amp;C won the design-and-build contract for a 1,534-bed campus, reported at US$2.15bn with a 63-month programme including design.</p>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:14px">
+    <h2>Awards found, newest first</h2>
+    <div class="bar" role="group" aria-label="Filter by sector">
+      <button class="chip" type="button" data-f="all" aria-pressed="true">All</button>
+      <button class="chip" type="button" data-f="rail" aria-pressed="false">Rail</button>
+      <button class="chip" type="button" data-f="civil" aria-pressed="false">Road and civil</button>
+      <button class="chip" type="button" data-f="building" aria-pressed="false">Building</button>
+      <button class="chip" type="button" data-f="industrial" aria-pressed="false">Industrial land</button>
+    </div>
+    <div class="scroll" tabindex="0" aria-label="Awards table">
+      <table>
+        <thead><tr><th>Date</th><th>Project and client</th><th>Awarded to</th><th>Value</th><th>Fit for us</th></tr></thead>
+        <tbody id="rows">
+          <tr data-s="civil">
+            <td class="date">1 Oct 2026</td>
+            <td><div class="proj">Tuas Road Viaduct Phase 2</div><div class="client">Land Transport Authority</div></td>
+            <td>CCCC (Singapore Branch), China Harbour (Singapore) Engineering, Hwa Seng Builder</td>
+            <td class="val">~S$1.2bn</td>
+            <td><span class="fit high">High</span><div class="why">Viaduct girders and precast segments need lifting frames, spreader beams and handling gear. Three main contractors to approach.</div></td>
+          </tr>
+          <tr data-s="building">
+            <td class="date">~18 Sep 2026</td>
+            <td><div class="proj">Tengah General and Community Hospital</div><div class="client">Ministry of Health</div></td>
+            <td>Ssangyong Engineering &amp; Construction</td>
+            <td class="val">US$2.15bn</td>
+            <td><span class="fit med">Medium</span><div class="why">Seven buildings over three basement levels. Excavation and early structure come first, so contact the contractor before procurement opens.</div></td>
+          </tr>
+          <tr data-s="building">
+            <td class="date">3 Aug 2026</td>
+            <td><div class="proj">Addition and alteration works with office fit-out, educational institution</div><div class="client">Client not named</div></td>
+            <td>Lincotrade &amp; Associates</td>
+            <td class="val">S$70m</td>
+            <td><span class="fit low">Low</span><div class="why">Interior fit-out. Little lifting or fabrication demand.</div></td>
+          </tr>
+          <tr data-s="industrial">
+            <td class="date">17 Jul 2026</td>
+            <td><div class="proj">Industrial site at Jalan Buroh</div><div class="client">JTC (land tender)</div></td>
+            <td>Soilbuild Group Holdings</td>
+            <td class="val">S$214.4m land</td>
+            <td><span class="fit med">Medium</span><div class="why">A land award, not a build contract. The development's construction package follows, so keep watching.</div></td>
+          </tr>
+          <tr data-s="rail">
+            <td class="date">Jul 2026 (work began 10 Jul)</td>
+            <td><div class="proj">Teck Ghee Station architectural works, Contract N109A</div><div class="client">Subcontract from Shanghai Tunnel Engineering</div></td>
+            <td>Lum Chang Interior</td>
+            <td class="val">S$32.9m</td>
+            <td><span class="fit low">Low</span><div class="why">Architectural finishes subcontract.</div></td>
+          </tr>
+          <tr data-s="civil">
+            <td class="date">28 May 2026</td>
+            <td><div class="proj">Commuter infrastructure works</div><div class="client">Land Transport Authority</div></td>
+            <td>OKP Holdings</td>
+            <td class="val">S$165.3m</td>
+            <td><span class="fit low">Low</span><div class="why">Commuter works such as walkways and shelters. Light on heavy lifting.</div></td>
+          </tr>
+          <tr data-s="civil">
+            <td class="date">26 May 2026</td>
+            <td><div class="proj">Enhancement works contract, 84-month programme from Q3 2026</div><div class="client">Land Transport Authority</div></td>
+            <td>Global Resource Construction subsidiary, in JV with KTC Civil Engineering &amp; Construction</td>
+            <td class="val">~S$757m</td>
+            <td><span class="fit unk">Unclear</span><div class="why">The announcement does not give the scope. Worth asking the JV what the works include.</div></td>
+          </tr>
+          <tr data-s="civil">
+            <td class="date">2026, start Q2</td>
+            <td><div class="proj">Major infrastructure works, Sembawang Contract 2</div><div class="client">Housing &amp; Development Board</div></td>
+            <td>Global Resource Construction subsidiary</td>
+            <td class="val">S$95.7m</td>
+            <td><span class="fit low">Low</span><div class="why">Roads and drainage over 55 months. Announcement date not confirmed.</div></td>
+          </tr>
+          <tr data-s="building">
+            <td class="date">15 Apr 2026</td>
+            <td><div class="proj">Centralised cooling for nine Tengah BTO projects</div><div class="client">Housing &amp; Development Board</div></td>
+            <td>Keppel</td>
+            <td class="val">Not disclosed</td>
+            <td><span class="fit low">Low</span><div class="why">District cooling plant and pipework.</div></td>
+          </tr>
+          <tr data-s="building">
+            <td class="date">20 Mar 2026</td>
+            <td><div class="proj">Marina Bay Sands expansion</div><div class="client">Las Vegas Sands</div></td>
+            <td>Woh Hup</td>
+            <td class="val">Multi-billion</td>
+            <td><span class="fit high">High</span><div class="why">Arena, podium and a 55-storey hotel tower. Heavy steel and precast lifting over several years.</div></td>
+          </tr>
+          <tr data-s="rail">
+            <td class="date">16 Mar 2026</td>
+            <td><div class="proj">Downtown Line 2 extension, Bukit Panjang to DE1 tunnels</div><div class="client">Land Transport Authority</div></td>
+            <td>China Railway Tunnel Group (Singapore Branch)</td>
+            <td class="val">~S$199m</td>
+            <td><span class="fit med">Medium</span><div class="why">Twin bored tunnels of about 1.8km each, built in a tight site beside a live station. Segment and muck handling gear applies.</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Fit ratings are an assessment of likely demand for lifting gear and steel fabrication, not a statement from the contractors. Stainless steel work is outside what we fabricate in-house.</p>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:6px">
+    <h2>Coming up</h2>
+    <dl class="list" style="margin:0">
+      <div><dt>2026 outlook</dt><dd style="margin:0">BCA expects S$47bn to S$53bn of construction contracts to be awarded this year, after about S$50.5bn in 2025.</dd></div>
+      <div><dt>Changi Airport</dt><dd style="margin:0">Terminal 3 upgrade tenders are expected in the second half of 2026. Terminal 5 main contracts were awarded in 2025.</dd></div>
+      <div><dt>Next edition</dt><dd style="margin:0">Adds BCA's monthly list of awards above S$16m, plus any LTA, HDB, PUB, JTC and listed-company announcements dated after 27 Oct.</dd></div>
+    </dl>
+    <p class="note" style="margin-top:8px">Coverage note (checked 27 Oct 2026): no new awards dated after 1 Oct 2026 were found in the searches run for HDB, JTC, MOH, MINDEF/DSTA, Changi Airport Group, private developments, listed-contractor SGX filings and BCA's list, so no rows were added. The LTA, PUB and wider SGX searches returned errors on some attempts and the LTA newsroom page could not be opened, so those channels are not fully checked; they will be repeated next edition. GeBIZ awards and BCA's list lag the announcements by several weeks.</p>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:12px">
+    <h2>Sources</h2>
+    <ul class="src">
+      <li><a href="https://www.worldconstructionnetwork.com/newsletters/lta-contracts-tuas-road-viaduct-phase">World Construction Network, Tuas Road Viaduct Phase 2</a></li>
+      <li><a href="https://koreaherald.com/article/10877189">Korea Herald, Tengah hospital contract</a></li>
+      <li><a href="https://constructionreviewonline.com/2-15b-tengah-hospital-ssangyong-ec-wins-design-build-contract-in-singapore/">Construction Review Online, Tengah hospital</a></li>
+      <li><a href="https://www.jtc.gov.sg/about-jtc/news-and-stories/press-releases/jtc-awards-tender-for-industrial-site-at-jalan-buroh">JTC, Jalan Buroh tender award</a></li>
+      <li><a href="https://www.minichart.com.sg/2026/08/02/lincotrade-associates-secures-s70-million-contract-for-office-fit-out-at-singapore-educational-institution-1/">Minichart, Lincotrade contract</a></li>
+      <li><a href="https://links.sgx.com/1.0.0/corporate-announcements/R04HKE22PVZJIWQ0/896462_LCC%20-%20Award%20of%20Contract_Teck%20Ghee%20Station.pdf">SGX, Lum Chang, Teck Ghee Station</a></li>
+      <li><a href="https://links.sgx.com/1.0.0/corporate-announcements/E8YYXWJFE6531VTL/659c0d1afa91d22ffae3328f4d64c23ea25ea6163357d16c9cf890e6927fcea1">SGX, OKP, LTA commuter infrastructure</a></li>
+      <li><a href="https://links.sgx.com/1.0.0/corporate-announcements/SBE9MXGS2VQ0K53V/890335_GRC%20-%20Annt%20-%20Award%20of%20Contract%20by%20the%20LTA%20for%20DE152.pdf">SGX, GRC, LTA enhancement works</a></li>
+      <li><a href="https://links.sgx.com/1.0.0/corporate-announcements/HRZS9W44ZJ4692IO/890179_GRC%20-%20Annt%20-%20Award%20of%20Contract%20by%20HDB%20for%20Major%20Infra%20work%20at%20Sembawang%20Contract%202.pdf">SGX, GRC, HDB Sembawang Contract 2</a></li>
+      <li><a href="https://www.hdb.gov.sg/hdb-pulse/news/2026/hdb-awards-new-centralised-cooling-system-contract-to-keppel-for-9-bto-projects-in-tengah">HDB, Tengah centralised cooling</a></li>
+      <li><a href="https://agbrief.com/news/singapore/21/03/2026/las-vegas-sands-appoints-woh-hup-to-lead-marina-bay-sands-expansion-project/">AGB, Marina Bay Sands expansion</a></li>
+      <li><a href="https://www.lta.gov.sg/content/ltagov/en/newsroom/2026/3/news-releases/lta-awards-final-civil-contract-for-the-downtown-line-2-extensio.html">LTA, Downtown Line 2 extension final civil contract</a></li>
+      <li><a href="https://theonlinecitizen.com/2026/01/22/bca-sees-s-47b-s-53b-construction-contracts-in-2026-led-by-changi-airport-terminal-5">The Online Citizen, BCA 2026 demand outlook</a></li>
+      <li><a href="https://isomer-user-content.by.gov.sg/338/9579f5a4-7d03-4abf-9e88-ec37e7ce842c/free_pjt_list.pdf">BCA, awards above S$16m, February 2026</a></li>
+    </ul>
+  </section>
+</div>
+<div class="endbar" aria-hidden="true"></div>
+
+<script>
+(function(){
+  var chips=document.querySelectorAll('.chip'), rows=document.querySelectorAll('#rows tr');
+  chips.forEach(function(c){
+    c.addEventListener('click',function(){
+      var f=c.getAttribute('data-f');
+      chips.forEach(function(x){x.setAttribute('aria-pressed', x===c?'true':'false');});
+      rows.forEach(function(r){r.hidden = !(f==='all' || r.getAttribute('data-s')===f);});
+    });
+  });
+})();
+</script>
+
+</body></html>
