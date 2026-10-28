@@ -91,6 +91,12 @@ tr.mrow td{background:var(--blush); color:var(--red); font-weight:900; font-size
 .dnote{display:inline-block; font-size:11px; font-weight:700; color:var(--red); letter-spacing:.04em; margin-top:4px; padding:1px 7px; border:1px dashed var(--red); border-radius:4px; line-height:1.35}
 .how{font-size:14px} .how summary{cursor:pointer; font-weight:700; color:var(--red); font-size:13px; letter-spacing:.12em; text-transform:uppercase; padding:4px 0} .how p{margin-top:8px}
 .fbtn{display:none}
+.team{display:flex; flex-wrap:wrap; gap:10px; align-items:center; font-size:14px}
+.team .tl{font-weight:700; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+.team input{font:16px var(--font); padding:8px 12px; border:2px solid var(--line); border-radius:4px; max-width:200px}
+.team input:focus{border-color:var(--red); outline:none}
+.tmsg{color:var(--red); font-weight:500}
+@media print{.team{display:none!important}}
 .newtag{display:inline-block; font-weight:700; font-size:11px; letter-spacing:.12em; text-transform:uppercase; background:var(--bright); color:#fff; padding:1px 7px; border-radius:4px; margin-right:8px; vertical-align:2px}
 td.st select{font:14px var(--font); padding:6px 8px; border:1px solid var(--line); border-radius:4px; background:#fff; color:var(--ink); max-width:130px}
 td.st select.set{border-color:var(--red); color:var(--red); font-weight:700}
@@ -153,7 +159,7 @@ td.st select.set{border-color:var(--red); color:var(--red); font-weight:700}
     <h2>All awards, newest first</h2>
     <div class="stats" id="stats" aria-live="polite"></div>
     <p class="note"><span id="total">148</span> contracts from BCA's monthly lists, news reports and the team's LeadManager account, one list with no duplicates. Fit for us is our own assessment.</p>
-    <details class="how"><summary>How to read this</summary><p class="note">Contracts above S$16m come from BCA's official monthly lists (January to August 2026). Others come from news reports, company announcements and LeadManager (read on 28 Oct 2026: stage Contract Awarded, above S$16m, last 12 months, 15 duplicates left out). A project reported by more than one source appears once. BCA's lists for Nov and Dec 2025 and Sep and Oct 2026 were not found online, so those months rely on news reports and LeadManager only. LeadManager rows are dated by their last record update, not the award date. Fit is High for heavy civil, tunnels, plants, large industrial and big new builds, and Low for upgrading, fit-out, alterations and maintenance. Stainless steel work is outside our scope. Value bands sort by their lower limit. Status is saved on this device only.</p></details>
+    <details class="how"><summary>How to read this</summary><p class="note">Contracts above S$16m come from BCA's official monthly lists (January to August 2026). Others come from news reports, company announcements and LeadManager (read on 28 Oct 2026: stage Contract Awarded, above S$16m, last 12 months, 15 duplicates left out). A project reported by more than one source appears once. BCA's lists for Nov and Dec 2025 and Sep and Oct 2026 were not found online, so those months rely on news reports and LeadManager only. LeadManager rows are dated by their last record update, not the award date. Fit is High for heavy civil, tunnels, plants, large industrial and big new builds, and Low for upgrading, fit-out, alterations and maintenance. Stainless steel work is outside our scope. Value bands sort by their lower limit. Status is shared with the team once you enter the team passcode.</p></details>
     <div class="ctl">
       <button class="chip fbtn" type="button" id="fbtn" aria-expanded="false" aria-controls="fgroups">Filters</button>
       <div class="fgroups" id="fgroups">
@@ -185,6 +191,7 @@ td.st select.set{border-color:var(--red); color:var(--red); font-weight:700}
         <button class="chip act" type="button" id="prbtn">Print</button>
         <span class="count" id="shown" aria-live="polite"></span>
       </div>
+      <div class="team" id="team"></div>
     </div>
     <div class="scroll" tabindex="0" aria-label="Awards table">
       <table>
@@ -388,17 +395,22 @@ td.st select.set{border-color:var(--red); color:var(--red); font-weight:700}
   var body=document.getElementById('frows'), q=document.getElementById('fq'), sel=document.getElementById('sortsel');
   var rows=[].slice.call(body.querySelectorAll('tr')), edition=1;
   var m=document.querySelector('.meta'); if(m){var e=/Edition (\d+)/.exec(m.textContent); if(e) edition=+e[1];}
-  var st={t:'all',f:0,s:'all'}, store={}, KEY='saw-status-v1';
-  try{store=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){store={};}
-  function save(){try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){}}
+  var st={t:'all',f:0,s:'all'};
+  var API='https://ilvcmzgnldprsvjzvfuh.supabase.co/functions/v1/status', PK='saw-pass', pass='', team=document.getElementById('team');
+  try{pass=localStorage.getItem(PK)||'';}catch(e){}
   var OPTS=['','Contacted','Quoted','Won','Not for us'];
   rows.forEach(function(r){
     var dn=r.querySelector('.dnote'); if(dn){dn.textContent='Update date, not award date';dn.title='LeadManager shows when its record was last updated. The award date is not shown.';}
     var id=r.getAttribute('data-id'), c=r.querySelector('td.st'), s=document.createElement('select');
     s.setAttribute('aria-label','Status');
     OPTS.forEach(function(o){var x=document.createElement('option');x.value=o;x.textContent=o||'Not started';s.appendChild(x);});
-    s.value=store[id]||''; if(s.value) s.className='set';
-    s.addEventListener('change',function(){if(s.value){store[id]=s.value;s.className='set';}else{delete store[id];s.className='';}save();});
+    s.disabled=true; s.title='Enter the team passcode to set status';
+    s.addEventListener('change',function(){
+      var prev=s.getAttribute('data-prev')||'', v=s.value; s.className=v?'set':'';
+      fetch(API,{method:'POST',headers:{'x-passcode':pass,'content-type':'application/json'},body:JSON.stringify({id:id,status:v})}).then(function(res){
+        if(!res.ok) throw 0; s.setAttribute('data-prev',v);
+      }).catch(function(){s.value=prev;s.className=prev?'set':'';team.querySelector('.tmsg').textContent='Could not save. Check your connection or passcode.';});
+    });
     c.appendChild(s); r._sel=s;
     if(r.getAttribute('data-f')==='3') r.className='hi';
     if(+r.getAttribute('data-ed')===edition && edition>1){var p=r.querySelector('.proj'); if(p){var t=document.createElement('span');t.className='newtag';t.textContent='New';p.insertBefore(t,p.firstChild);}}
@@ -458,6 +470,32 @@ td.st select.set{border-color:var(--red); color:var(--red); font-weight:700}
     a.href=URL.createObjectURL(blob); a.download='singapore-awards-watch.csv'; document.body.appendChild(a); a.click(); a.remove();
   });
   document.getElementById('prbtn').addEventListener('click',function(){window.print();});
+
+  function tmsg(t){var m=team.querySelector('.tmsg'); if(m) m.textContent=t||'';}
+  function lockUI(msg){
+    rows.forEach(function(r){r._sel.disabled=true;r._sel.value='';r._sel.className='';r._sel.setAttribute('data-prev','');r._sel.title='Enter the team passcode to set status';});
+    team.innerHTML='<span class="tl">Team status</span><input type="password" id="tpass" placeholder="Team passcode" aria-label="Team passcode" autocomplete="off"><button class="chip act" type="button" id="tgo">Unlock</button><span class="tmsg"></span>';
+    document.getElementById('tgo').addEventListener('click',function(){pass=document.getElementById('tpass').value.trim(); if(pass) load();});
+    document.getElementById('tpass').addEventListener('keydown',function(e){if(e.key==='Enter') document.getElementById('tgo').click();});
+    tmsg(msg);
+  }
+  function unlockUI(){
+    team.innerHTML='<span class="tl">Team status is on</span><button class="chip" type="button" id="tlock">Lock</button><span class="tmsg"></span>';
+    document.getElementById('tlock').addEventListener('click',function(){try{localStorage.removeItem(PK);}catch(e){} pass=''; lockUI('');});
+  }
+  function load(){
+    fetch(API,{headers:{'x-passcode':pass}}).then(function(res){
+      if(res.status===401){try{localStorage.removeItem(PK);}catch(e){} pass=''; lockUI('Wrong passcode.'); return null;}
+      if(res.status===503){lockUI('Team status is not set up yet.'); return null;}
+      if(!res.ok) throw 0; return res.json();
+    }).then(function(j){
+      if(!j) return; try{localStorage.setItem(PK,pass);}catch(e){}
+      rows.forEach(function(r){var v=(j.statuses||{})[r.getAttribute('data-id')]||''; r._sel.disabled=false; r._sel.title=''; r._sel.value=v; r._sel.className=v?'set':''; r._sel.setAttribute('data-prev',v);});
+      unlockUI();
+    }).catch(function(){lockUI('Could not reach the team status service.');});
+  }
+  document.addEventListener('visibilitychange',function(){if(!document.hidden&&pass) load();});
+  lockUI(''); if(pass) load();
   stats(); render();
 })();
 </script>
