@@ -96,6 +96,12 @@ tr.mrow td{background:var(--blush); color:var(--red); font-weight:900; font-size
 .team input{font:16px var(--font); padding:8px 12px; border:2px solid var(--line); border-radius:4px; max-width:200px}
 .team input:focus{border-color:var(--red); outline:none}
 .tmsg{color:var(--red); font-weight:500}
+.rct{margin-top:8px; padding-top:8px; border-top:1px dashed var(--line); font-size:13px; line-height:1.45; display:flex; flex-direction:column; gap:6px; word-break:break-word}
+.rct .rcn{font-weight:700; color:var(--muted); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; display:block}
+.rct .rn{color:var(--muted)}
+.rct a{color:var(--red)}
+@media (max-width:720px){td[data-label="Awarded to"]{flex-wrap:wrap} .rct{width:100%; text-align:left}}
+@media print{.rct{display:none}}
 .ctb{background:var(--blush); padding:12px 16px; display:flex; flex-direction:column; gap:3px; font-size:14px; border-bottom:1px solid var(--line)}
 .ctt{font-weight:900; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--red); margin-bottom:2px}
 .cts{color:var(--muted); font-size:12.5px; margin-top:4px}
@@ -492,7 +498,7 @@ td.st textarea{font:14px var(--font); width:100%; min-width:150px; min-height:64
     nb.addEventListener('click',function(){ta.hidden=!ta.hidden; if(!ta.hidden) ta.focus();});
   });
   function paint(r){var d=r._d; r._sel.value=d.status; r._sel.className=d.status?'set':''; r._ai.value=d.assignee; r._ta.value=d.note; r._nb.textContent=d.note?('Note: '+(d.note.length>26?d.note.slice(0,26)+'...':d.note)):'Add note'; if(d.note) r._ta.hidden=true; refresh(r);}
-  function refresh(r){var d=r._d; r._txt=r._base+' '+(d.assignee||'').toLowerCase()+' '+(d.note||'').toLowerCase();}
+  function refresh(r){var d=r._d; r._txt=r._base+' '+(d.assignee||'').toLowerCase()+' '+(d.note||'').toLowerCase()+' '+(r._ct||'');}
   rows.forEach(refresh);
   function names(){var set={}; rows.forEach(function(r){if(r._d.assignee) set[r._d.assignee]=1;}); return Object.keys(set).sort();}
   function filters(){
@@ -556,6 +562,21 @@ td.st textarea{font:14px var(--font); width:100%; min-width:150px; min-height:64
     cv.innerHTML=html||'<p class="empty">No awards match these filters.</p>';
     [].forEach.call(cv.querySelectorAll('details'),function(d){d.addEventListener('toggle',function(){openCo[d.getAttribute('data-n')]=d.open;});});
   }
+  function telh(p){return 'tel:+'+String(p).split('/')[0].replace(/[^\d]/g,'');}
+  function paintContacts(){
+    rows.forEach(function(r){
+      var cell=r.children[2], old=cell.querySelector('.rct'); if(old) old.remove();
+      var html='';
+      r._co.forEach(function(n){
+        var c=contacts[n]; if(!c) return;
+        var ps=(c.people||[]);
+        var line=ps.length?ps.map(function(p){return '<div><b>'+esc(p.name)+'</b>'+(p.position?', '+esc(p.position):'')+(p.phone?' &middot; <a href="'+esc(telh(p.phone))+'">'+esc(p.phone)+'</a>':'')+(p.email?'<br><a href="mailto:'+esc(p.email)+'">'+esc(p.email)+'</a>':'')+'</div>';}).join(''):'<div class="rn">Contact person not listed</div><div>'+(c.phone?'<a href="'+esc(telh(c.phone))+'">'+esc(c.phone)+'</a>':'')+(c.email?'<br><a href="mailto:'+esc(c.email)+'">'+esc(c.email)+'</a>':'')+'</div>';
+        html+='<div class="rco">'+(r._co.length>1?'<span class="rcn">'+esc(c.name)+'</span>':'')+line+'</div>';
+      });
+      if(html){var d=document.createElement('div');d.className='rct';d.innerHTML=html;cell.appendChild(d);}
+      r._ct=html?(function(){var t=document.createElement('div');t.innerHTML=html;return t.textContent.toLowerCase();})():''; refresh(r);
+    });
+  }
   function ctBlock(n){
     var c=contacts[n]; if(!c) return '';
     function tel(p){return 'tel:+'+String(p).split('/')[0].replace(/[^\d]/g,'');}
@@ -599,6 +620,7 @@ td.st textarea{font:14px var(--font); width:100%; min-width:150px; min-height:64
   function setLocked(lock){
     rows.forEach(function(r){[r._sel,r._ai,r._nb,r._ta].forEach(function(x){x.disabled=lock;}); if(lock){r._d={status:'',assignee:'',note:''}; paint(r);} });
     if(lock) contacts={};
+    paintContacts();
     document.getElementById('sgrp').hidden=lock; if(lock){st.x='all';st.a='all';[].forEach.call(document.querySelectorAll('.tchip'),function(c){c.setAttribute('aria-pressed',c.getAttribute('data-x')==='all'?'true':'false');});}
   }
   function lockUI(msg){
@@ -620,7 +642,7 @@ td.st textarea{font:14px var(--font); width:100%; min-width:150px; min-height:64
       if(!res.ok) throw 0; return res.json();
     }).then(function(j){
       if(!j) return; try{localStorage.setItem(PK,pass);}catch(e){}
-      var it=j.items||{}; setLocked(false); contacts=j.contacts||{};
+      var it=j.items||{}; setLocked(false); contacts=j.contacts||{}; paintContacts();
       rows.forEach(function(r){var d=it[r.getAttribute('data-id')]; r._d=d?{status:d.status||'',assignee:d.assignee||'',note:d.note||''}:{status:'',assignee:'',note:''}; paint(r);});
       unlockUI(); filters();
     }).catch(function(){lockUI('Could not reach the team status service.');});
