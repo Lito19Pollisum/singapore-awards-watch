@@ -96,6 +96,10 @@ tr.mrow td{background:var(--blush); color:var(--red); font-weight:900; font-size
 .team input{font:16px var(--font); padding:8px 12px; border:2px solid var(--line); border-radius:4px; max-width:200px}
 .team input:focus{border-color:var(--red); outline:none}
 .tmsg{color:var(--red); font-weight:500}
+.ctb{background:var(--blush); padding:12px 16px; display:flex; flex-direction:column; gap:3px; font-size:14px; border-bottom:1px solid var(--line)}
+.ctt{font-weight:900; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--red); margin-bottom:2px}
+.cts{color:var(--muted); font-size:12.5px; margin-top:4px}
+@media print{.ctb{display:none!important}}
 @media print{.team{display:none!important}}
 .newtag{display:inline-block; font-weight:700; font-size:11px; letter-spacing:.12em; text-transform:uppercase; background:var(--bright); color:#fff; padding:1px 7px; border-radius:4px; margin-right:8px; vertical-align:2px}
 td.st select{font:14px var(--font); padding:6px 8px; border:1px solid var(--line); border-radius:4px; background:#fff; color:var(--ink); max-width:130px}
@@ -445,7 +449,7 @@ td.st textarea{font:14px var(--font); width:100%; min-width:150px; min-height:64
   var st={t:'all',f:0,s:'all',x:'all',a:'all',v:'list'};
   var API='https://ilvcmzgnldprsvjzvfuh.supabase.co/functions/v1/status', PK='saw-pass', pass='', team=document.getElementById('team'), unlocked=false;
   try{pass=localStorage.getItem(PK)||'';}catch(e){}
-  var OPTS=['','Contacted','Quoted','Won','Not for us'];
+  var OPTS=['','Contacted','Quoted','Won','Not for us'], contacts={};
   var MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'], AB='Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ');
   // source links: BCA PDFs come from the Sources list, so newly added months link automatically
   var bca={}; [].forEach.call(document.querySelectorAll('.src a'),function(a){var mm=/(January|February|March|April|May|June|July|August|September|October|November|December) (\d{4})/.exec(a.textContent); if(mm&&/BCA/.test(a.textContent)) bca[mm[2]+'-'+(MONTHS.indexOf(mm[1])+1)]=a.href;});
@@ -538,10 +542,10 @@ td.st textarea{font:14px var(--font); width:100%; min-width:150px; min-height:64
     var list=Object.keys(g).map(function(n){var rs=g[n]; return {n:n,rs:rs,tot:rs.reduce(function(a,r){return a+r._v;},0),hi:rs.filter(function(r){return r._f===3;}).length};});
     list.sort(function(a,b){return (b.tot-a.tot)||(b.rs.length-a.rs.length)||a.n.localeCompare(b.n);});
     var none=vis.filter(function(r){return !r._co.length;}).length;
-    var html='<p class="cnote">'+list.length+' contractors. Total value counts value bands at their lower limit. '+(none?none+' awards have no contractor listed yet and are not shown here.':'')+'</p>';
+    var html='<p class="cnote">'+(unlocked?'':'Enter the team passcode to see contractor contact details. ')+list.length+' contractors. Total value counts value bands at their lower limit. '+(none?none+' awards have no contractor listed yet and are not shown here.':'')+'</p>';
     list.forEach(function(c){
       c.rs.sort(function(a,b){return b._s-a._s;});
-      html+='<details class="co"'+(openCo[c.n]?' open':'')+' data-n="'+esc(c.n)+'"><summary><span class="cn">'+esc(c.n)+'</span><span class="ct">'+fmt(c.tot)+'</span><span class="cs">'+c.rs.length+' award'+(c.rs.length>1?'s':'')+(c.hi?', '+c.hi+' high fit':'')+'</span><span></span></summary><ul>';
+      html+='<details class="co"'+(openCo[c.n]?' open':'')+' data-n="'+esc(c.n)+'"><summary><span class="cn">'+esc(c.n)+'</span><span class="ct">'+fmt(c.tot)+'</span><span class="cs">'+c.rs.length+' award'+(c.rs.length>1?'s':'')+(c.hi?', '+c.hi+' high fit':'')+'</span><span></span></summary>'+ctBlock(c.n)+'<ul>';
       c.rs.forEach(function(r){
         var p=r.querySelector('.proj').cloneNode(true); [].forEach.call(p.querySelectorAll('.newtag'),function(x){x.remove();});
         var dt=r.querySelector('td.date').childNodes[0].textContent, vl=r.querySelector('td.val').textContent, f=r.querySelector('.fit');
@@ -551,6 +555,14 @@ td.st textarea{font:14px var(--font); width:100%; min-width:150px; min-height:64
     });
     cv.innerHTML=html||'<p class="empty">No awards match these filters.</p>';
     [].forEach.call(cv.querySelectorAll('details'),function(d){d.addEventListener('toggle',function(){openCo[d.getAttribute('data-n')]=d.open;});});
+  }
+  function ctBlock(n){
+    var c=contacts[n]; if(!c) return '';
+    function tel(p){return 'tel:+'+String(p).split('/')[0].replace(/[^\d]/g,'');}
+    function url(w){return 'https://'+String(w).replace(/^https?:\/\//,'').replace(/\/+$/,'');}
+    var ps=(c.people||[]).map(function(p){return '<div class="ctp"><b>'+esc(p.name)+'</b>'+(p.position?', '+esc(p.position):'')+(p.phone?' &middot; <a href="'+esc(tel(p.phone))+'">'+esc(p.phone)+'</a>':'')+(p.email?' &middot; <a href="mailto:'+esc(p.email)+'">'+esc(p.email)+'</a>':'')+'</div>';}).join('');
+    var off=[]; if(c.phone) off.push('<a href="'+esc(tel(c.phone))+'">'+esc(c.phone)+'</a>'); if(c.email) off.push('<a href="mailto:'+esc(c.email)+'">'+esc(c.email)+'</a>'); if(c.website) off.push('<a href="'+esc(url(c.website))+'" target="_blank" rel="noopener">'+esc(c.website)+'</a>');
+    return '<div class="ctb"><div class="ctt">Contact, '+esc(c.company)+'</div>'+(ps||'<div class="ctp">Contact person: not listed in LeadManager</div>')+'<div class="ctp">Office: '+off.join(' &middot; ')+'</div>'+(c.address?'<div class="ctp">'+esc(c.address)+'</div>':'')+'<div class="ctp cts">Source: '+esc(c.source||'LeadManager')+'. Team only, do not share outside Pollisum.</div></div>';
   }
   function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
   function stats(){
@@ -586,6 +598,7 @@ td.st textarea{font:14px var(--font); width:100%; min-width:150px; min-height:64
   function tmsg(t){var x=team.querySelector('.tmsg'); if(x) x.textContent=t||'';}
   function setLocked(lock){
     rows.forEach(function(r){[r._sel,r._ai,r._nb,r._ta].forEach(function(x){x.disabled=lock;}); if(lock){r._d={status:'',assignee:'',note:''}; paint(r);} });
+    if(lock) contacts={};
     document.getElementById('sgrp').hidden=lock; if(lock){st.x='all';st.a='all';[].forEach.call(document.querySelectorAll('.tchip'),function(c){c.setAttribute('aria-pressed',c.getAttribute('data-x')==='all'?'true':'false');});}
   }
   function lockUI(msg){
@@ -607,7 +620,7 @@ td.st textarea{font:14px var(--font); width:100%; min-width:150px; min-height:64
       if(!res.ok) throw 0; return res.json();
     }).then(function(j){
       if(!j) return; try{localStorage.setItem(PK,pass);}catch(e){}
-      var it=j.items||{}; setLocked(false);
+      var it=j.items||{}; setLocked(false); contacts=j.contacts||{};
       rows.forEach(function(r){var d=it[r.getAttribute('data-id')]; r._d=d?{status:d.status||'',assignee:d.assignee||'',note:d.note||''}:{status:'',assignee:'',note:''}; paint(r);});
       unlockUI(); filters();
     }).catch(function(){lockUI('Could not reach the team status service.');});
